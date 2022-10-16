@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: back
+spec:
+  selector:
+    matchLabels:
+      app: back
+  template:
+    metadata:
+      labels:
+        app: back
+    spec:
+      containers:
+      - name: back
+        image: zunderene/back-end
+        resources:
+          limits:
+            memory: "500Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 4000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: back
+spec:
+  selector:
+    app: back
+    tier: backend
+  ports:
+  - protocol: TCP
+    port: 4000
+    targetPort: http
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: from
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        editor: vscode
+    spec:
+      env:
+      - name: URL_API
+        value: "http://backend:4000"
+      containers:
+      - name: from
+        image: zunderene/from
+        resources:
+          limits:
+            memory: "800Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 4000
