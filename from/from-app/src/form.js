@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
+import axios from 'axios'
 import { Container,Input, Form, TextArea, Button, Table, Label} from 'semantic-ui-react'
-import {get, set} from './service/com.js'
 
 class FormBuzon extends Component {
     constructor(props) {
@@ -14,14 +14,14 @@ class FormBuzon extends Component {
 
     handleChange = (e, { name, value }) => {this.setState({ [name]: value })}
 
-    handleSubmit = () => {
+    handleSubmit = async () => {
         const { name, area } = this.state;
-        set(name, area)
-        setTimeout(() => get ,1000)
+        await axios.post('/set', { "name": name, "pots": area})
+        setTimeout(async () => await axios.post('/get') ,1000)
     } 
 
      componentDidMount(){
-        this.setState({data : get()});
+        axios.post('/get').then((result) => this.state.data.push(result));
     }
 
     render(){

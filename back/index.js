@@ -1,10 +1,6 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require("body-parser");
-const config = require('dotenv')
-const { PrismaClient } = require('@prisma/client')
-
-const prisma = new PrismaClient()
 
 const app = express();
 
@@ -14,19 +10,21 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-const port = 4000;
 
 app.get('/', (req, res) => res.send('Hello World desde Express'));
-app.get('/get', async (req,res)  => res.send(await prisma.post.findMany()))
-app.post('/set', async  (req,res) => {
-    var post = JSON.parse(JSON.stringify(req.body));
-    await prisma.post.create({
-        data: {
-            content: post.content,
-            authorId : post.name
-        }
+app.get('/get', async (req,res)  => {
+    const SelectQuery = " SELECT * FROM Posts";
+        db.query(SelectQuery, (err, result) => {
+        res.send(result)
     })
-    console.log(post)
+})
+app.post('/set', async  (req,res) => {
+    const user = req.body.name;
+    const pots = req.body.pots;
+    const InsertPots = "INSERT INTO pots (user,pots) values (?,?)"
+    db.query(InsertPots, [user, pots], (err, result) => {
+       
+    })
     res.send(200)
 
 })
