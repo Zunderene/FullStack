@@ -4,7 +4,11 @@ COPY ./ /app
 WORKDIR /app
 
 RUN npm install
-RUN npx prisma generate
+
+ENV HOST ""
+ENV USER ""
+ENV PASS ""
+ENV DB ""
 
 EXPOSE 4000
 CMD ["node", "index.js"]

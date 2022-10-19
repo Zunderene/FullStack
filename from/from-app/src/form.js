@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import { Container,Input, Form, TextArea, Button, Table, Label} from 'semantic-ui-react'
 
+
+const SERVICE = process.env.REACT_APP_SERVICE
+
 class FormBuzon extends Component {
     constructor(props) {
         super(props);
@@ -16,17 +19,16 @@ class FormBuzon extends Component {
 
     handleSubmit = async () => {
         const { name, area } = this.state;
-        await axios.post('/set', { "name": name, "pots": area})
-        setTimeout(async () => await axios.post('/get') ,1000)
+        await axios.post(SERVICE + '/set', { "name": name, "pots": area})
+        setTimeout(async () => await axios.get(SERVICE + '/get') ,1000)
     } 
 
      componentDidMount(){
-        axios.post('/get').then((result) => this.state.data.push(result));
+        axios.get(SERVICE + '/get').then((result) =>{console.log(result.data);this.setState({ "data": result.data})});
     }
 
     render(){
         const { name, area, data } = this.state
-        console.log(data)
         return(
             <Container>
                 <Form onSubmit={this.handleSubmit}>
@@ -64,10 +66,10 @@ class FormBuzon extends Component {
                             return (
                                 <Table.Row>
                                     <Table.Cell>
-                                        {ele.authorId}
+                                        {ele.name}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {ele.content}
+                                        {ele.post}
                                     </Table.Cell>
                                 </Table.Row>
                             )
